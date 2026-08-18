@@ -107,8 +107,13 @@ ccache -M 100G && ccache -o compression=true
 # B860H V5
 repo init --git-lfs -u https://github.com/LineageOS/android.git -b lineage-22.2
 # HG680P
-repo init --git-lfs -u https://github.com/LineageOS/android.git -b lineage-20
+repo init --git-lfs -u https://github.com/LineageOS/android.git -b lineage-20.0
 ```
+
+> **Penamaan branch berbeda antara manifest dan tree Amlogic.**
+> Manifest LineageOS 20 memakai `lineage-20.0`, sedangkan `device/amlogic/*`,
+> `kernel/amlogic/*`, dan blob TheMuppets memakai `lineage-20` (tanpa `.0`).
+> Untuk 22.x keduanya sama-sama `lineage-22.x`.
 
 ---
 

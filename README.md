@@ -37,7 +37,7 @@ Semua nilai konfigurasi di dokumen ini diambil langsung dari tree LineageOS upst
 | Partisi | dynamic (`super` ±1,6 GB) | legacy (system 1,28 GB + vendor 256 MB + odm 128 MB) |
 | Boot SD/USB | didukung upstream | harus di-backport |
 | Plafon versi | `lineage-22.2` | `lineage-22.1` |
-| Rekomendasi | `lineage-22.2` | `lineage-20` |
+| Rekomendasi | `lineage-22.2` | `lineage-20.0` |
 
 ## Urutan kerja
 

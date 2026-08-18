@@ -308,7 +308,7 @@ td:first-child{font-weight:500}
         <tr><td>Skema partisi</td><td>Dynamic (<span class="mono">super</span> ±1,6 GB)</td><td>Legacy (system 1,28 GB + vendor 256 MB + odm 128 MB)</td></tr>
         <tr><td>Boot dari SD/USB</td><td>Didukung upstream</td><td>Harus di-backport sendiri</td></tr>
         <tr><td>Plafon versi</td><td class="mono">lineage-22.2</td><td class="mono">lineage-22.1</td></tr>
-        <tr><td>Rekomendasi target</td><td class="mono">lineage-22.2</td><td class="mono">lineage-20</td></tr>
+        <tr><td>Rekomendasi target</td><td class="mono">lineage-22.2</td><td class="mono">lineage-20.0</td></tr>
         <tr><td>Risiko brick</td><td>Sedang — bootloader perlu unlock</td><td>Rendah — burn mode terbuka</td></tr>
       </tbody>
     </table>
@@ -493,9 +493,14 @@ repo init --git-lfs \
           <pre>mkdir -p ~/los20 &amp;&amp; cd ~/los20
 repo init --git-lfs \
   -u https://github.com/LineageOS/android.git \
-  -b lineage-20</pre>
+  -b lineage-20.0</pre>
         </div>
       </div>
+    </div>
+
+    <div class="note warn">
+      <span class="note-tag">Penamaan branch berbeda</span>
+      <p>Manifest LineageOS 20 memakai <code>lineage-20.0</code>, sedangkan tree Amlogic — <code>device/amlogic/*</code>, <code>kernel/amlogic/*</code>, dan blob TheMuppets — memakai <code>lineage-20</code> tanpa <code>.0</code>. Untuk 22.x keduanya sama. Salah satu nilai ini akan membuat <code>repo sync</code> gagal menemukan branch.</p>
     </div>
 
     <div class="checkpoint">
