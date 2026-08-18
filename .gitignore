@@ -1,0 +1,15 @@
+# build output
+out/
+*.img
+*.zip
+*.tar.gz
+
+# dump perangkat (besar, jangan di-commit)
+dump/
+*.PARTITION
+*.dtb
+*.dts.orig
+
+# editor
+.vscode/
+*.swp
