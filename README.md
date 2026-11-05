@@ -1,71 +1,41 @@
-# android_build_amlogic_stb
+# Android ROM untuk ZTE B860H V2
 
-Rencana kerja **porting LineageOS ke STB Amlogic** — dua device sekaligus:
+Proyek ini fokus **hanya pada ZTE B860H V2 berbasis Amlogic S905X (GXL)**. Targetnya menyiapkan sistem Android TV yang bisa menjalankan prototype Orbit dan menyediakan USB gadget/AOA pada port OTG. **B860H V5 ditunda** dan tidak menjadi acuan konfigurasi maupun build.
 
-| Device | SoC | Keluarga | Common tree |
-|---|---|---|---|
-| **ZTE B860H V5** | S905X2 | `g12a` | `device/amlogic/g12-common` |
-| **Fiberhome HG680P** | S905X | `gxl` | `device/amlogic/gx-common` |
+## Target versi
 
-Semua nilai konfigurasi di dokumen ini diambil langsung dari tree LineageOS upstream
-(bukan dari ingatan atau forum), dan dicantumkan sumbernya.
+Mulai dari **Android 9 / LineageOS berbasis Android 9** sebagai target bring-up. Common tree LineageOS untuk Amlogic GXL menyatakan dukungan S905X dan memakai kernel Amlogic 4.9 berbasis Android 9. Ini membuat Android 9 titik awal yang lebih berdasar daripada Android 10. Dukungan upstream tersebut bukan bukti bahwa image siap untuk B860H V2: device tree, partisi, vendor blobs, boot chain, dan port OTG tetap perlu dicocokkan dengan unit.
 
-> **Status: rencana, belum dieksekusi.**
-> Belum ada build yang dijalankan untuk kedua device ini.
+Android 10 menjadi target lanjutan hanya jika ditemukan basis BSP/device tree GXL yang cocok dengan board ini. Jangan menganggap upgrade dari Android 6 sebagai perubahan framework saja: kernel, vendor HAL/blobs, DTB, dan layout partisi harus serasi.
 
-## Isi
+## Status
 
-| File | Isi |
-|---|---|
-| [`PLAN.md`](PLAN.md) | Runbook 12 fase, dari cek kelayakan sampai rilis |
-| [`docs/porting-lineageos-amlogic.html`](docs/porting-lineageos-amlogic.html) | Versi web dari runbook yang sama |
+- Belum ada ROM Android 9/10 yang dibangun atau diverifikasi dalam folder ini.
+- B860H V2 dilaporkan memakai S905X/GXL; verifikasi unit melalui `getprop`, DTB, dan foto PCB sebelum memilih konfigurasi final.
+- Catatan Armbian lokal untuk B860H V2 melaporkan UDC `c9100000.usb` dan pergantian role ke `device`, tetapi README-nya juga memiliki pernyataan yang saling bertentangan tentang status verifikasi. Perlakukan ini sebagai petunjuk awal; ulangi pengecekan di unit dan kernel yang dipakai ROM.
+- UDC aktif belum membuktikan port fisik, profil AOA DJI, atau video stream berfungsi.
 
-## Ringkasan matriks
+## Tahapan kerja
 
-| Parameter | B860H V5 | HG680P |
-|---|---|---|
-| SoC / keluarga | S905X2 · g12a | S905X · gxl |
-| RAM / eMMC | 2 GB / 8 GB | 2 GB / 8 GB |
-| GPU | Mali-G31 (Bifrost, Vulkan) | Mali-450 (Utgard, tanpa Vulkan) |
-| Kernel | `kernel/amlogic/linux-4.9` | `kernel/amlogic/linux-4.9-pie` |
-| Defconfig | `g12a_defconfig` | `meson64_defconfig` |
-| DTS basis | `g12a_s905x2_u212.dts` | `gxl_p212_2g.dts` |
-| Modul GPU | `mali-driver/bifrost` | `mali-driver/utgard` |
-| Modul media | `media-4.9` | `media-pie` |
-| Device acuan | `device/askey/dopinder` | — tidak ada |
-| WiFi upstream | ada (`rtl8822cs`) | tidak ada (`rtl8189fs` / `rtl8188fu`) |
-| Partisi | dynamic (`super` ±1,6 GB) | legacy (system 1,28 GB + vendor 256 MB + odm 128 MB) |
-| Boot SD/USB | didukung upstream | harus di-backport |
-| Plafon versi | `lineage-22.2` | `lineage-22.1` |
-| Rekomendasi | `lineage-22.2` | `lineage-20.0` |
+1. Identifikasi revisi V2, RAM/eMMC, Wi-Fi, bootloader, partisi, kernel, DTB, dan port OTG.
+2. Backup penuh eMMC dan pastikan metode pemulihan sebelum mengubah partisi.
+3. Validasi boot Linux dari SD/USB dan kumpulkan DTB/serial log sebagai referensi hardware.
+4. Siapkan device tree B860H V2 berdasarkan GXL, lalu bangun image Android 9 minimal.
+5. Bring-up HDMI, storage, Ethernet/Wi-Fi, audio, dan remote.
+6. Aktifkan serta uji USB gadget di kernel Android: UDC, role peripheral, configfs/FunctionFS, lalu enumerasi dan bulk transfer dengan host uji.
+7. Baru integrasikan AOA Orbit dan uji RC-N; Goggles tetap tahap berikutnya.
 
-## Urutan kerja
+Runbook: [PLAN.md](PLAN.md). Referensi proyek Armbian B860H V2: `/Users/macpro/orbit-stream/armbian-b860h`.
 
-| Fase | Isi |
-|---|---|
-| 00 | Kelayakan device — bootloader, burn mode, secure boot |
-| 01 | Backup & jaring pengaman — dump eMMC penuh |
-| 02 | Build environment |
-| 03 | Sync sumber & manifest lokal |
-| 04 | Device tree |
-| 05 | DTS kernel |
-| 06 | WiFi & Bluetooth |
-| 07 | Blob proprietary |
-| 08 | Build |
-| 09 | Instalasi — SD/USB, USB Burning Tool, recovery |
-| 10 | Bring-up & debugging |
-| 11 | Finishing & rilis |
+## Sumber teknis awal
 
-## Sub-proyek
+- [LineageOS Amlogic GX common tree](https://github.com/LineageOS/android_device_amlogic_gx-common) — mendata keluarga GXL/S905X dan basis kernel Android 9 / Linux 4.9.
+- [DTS B860H V1/V2 di pmaports](https://git.mrlokop.dev/MRLokop/pmaports/commit/bac841dcaee3dfb4fc6da384f78a6cb0e2f191be) — referensi device tree Linux; bukan DTS Android siap pakai.
+- [Linux USB Gadget API](https://docs.kernel.org/driver-api/usb/gadget.html) — konsep UDC dan gadget driver.
 
-- **HG680P LineageOS 20** — rencana terpisah yang jauh lebih rinci untuk satu device:
-  `android_build_fiberhome_hg680p-20`
+## Di luar cakupan saat ini
 
-## Sumber
-
-- [`LineageOS/android_device_amlogic_g12-common`](https://github.com/LineageOS/android_device_amlogic_g12-common)
-- [`LineageOS/android_device_amlogic_gx-common`](https://github.com/LineageOS/android_device_amlogic_gx-common)
-- [`LineageOS/android_device_askey_dopinder`](https://github.com/LineageOS/android_device_askey_dopinder)
-- [`LineageOS/android_kernel_amlogic_linux-4.9`](https://github.com/LineageOS/android_kernel_amlogic_linux-4.9) · [`linux-4.9-pie`](https://github.com/LineageOS/android_kernel_amlogic_linux-4.9-pie)
-- [`TheMuppets/proprietary_vendor_amlogic_gx-common`](https://github.com/TheMuppets/proprietary_vendor_amlogic_gx-common)
-- [XDA — LineageOS untuk keluarga Amlogic](https://xdaforums.com/t/official-lineageos-22-for-amlogic-gxl-gxm-g12a-sm1-ne-family-devices-android-tv-tablet.4649881/)
+- B860H V5/S905X2.
+- Fiberhome HG680P.
+- Raspberry Pi sebagai perangkat produk.
+- USB host/RNDIS pada TV Box; transport yang dituju hanya USB gadget/AOA.
