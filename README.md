@@ -25,7 +25,7 @@ Android 10 menjadi target lanjutan hanya jika ditemukan basis BSP/device tree GX
 6. Aktifkan serta uji USB gadget di kernel Android: UDC, role peripheral, configfs/FunctionFS, lalu enumerasi dan bulk transfer dengan host uji.
 7. Baru integrasikan AOA Orbit dan uji RC-N; Goggles tetap tahap berikutnya.
 
-Runbook: [PLAN.md](PLAN.md). Panduan host Debian Trixie: [build.md](build.md). Referensi proyek Armbian B860H V2: `/Users/macpro/orbit-stream/armbian-b860h`.
+Runbook: [PLAN.md](PLAN.md). Panduan host Debian Trixie: [build.md](build.md). Jalur pemulihan dan no-write eMMC: [rescue.md](rescue.md). Referensi proyek Armbian B860H V2: `/Users/macpro/orbit-stream/armbian-b860h`.
 
 ## Sumber teknis awal
 

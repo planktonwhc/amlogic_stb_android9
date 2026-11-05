@@ -147,7 +147,7 @@ Hasil biasanya berada di:
 out/target/product/b860hv2/
 ```
 
-Sebelum menyentuh STB, arsipkan log build, checksum setiap image, source manifest (`repo manifest -r`), config kernel, DTB, dan cara pemulihan. Tahap boot/flash harus mengikuti Fase 1 dan Fase 4–5 di [PLAN.md](PLAN.md); jangan flash eMMC sebelum backup dan jalur unbrick terbukti.
+Sebelum menyentuh STB, arsipkan log build, checksum setiap image, source manifest (`repo manifest -r`), config kernel, DTB, dan cara pemulihan. Untuk mempertahankan eMMC, ikuti [rescue.md](rescue.md) dan rencana validasi di [PLAN.md](PLAN.md). Jangan flash eMMC sebelum backup dan jalur unbrick terbukti.
 
 ## 8. Build ulang dan bersihkan
 
